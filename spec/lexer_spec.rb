@@ -3,18 +3,30 @@ require 'brainclusterfuck/lexer'
 require 'set'
 
 describe Brainclusterfuck::Lexer do
-  describe '.sanitize' do
-    it 'strips out everything except the valid brainfuck instructions' do
+  describe '#instruction_chars' do
+    it 'strips out everything except the valid brainfuck instructions and keeps the order' do
       all_ascii_chars = (0..255).map { |n| n.chr }.join('')
 
-      instruction_chars = Brainclusterfuck::Lexer.sanitize(all_ascii_chars).each_char.to_a
+      lexer = Brainclusterfuck::Lexer.new(all_ascii_chars)
 
-      # and read from stdin (,) is not valid here
-      expect(Set.new(instruction_chars)).to eq(Set.new(%w([ ] + - > < .)))
+      ordered_valid_chars = %w([ ] + - > < .).sort_by { |c| c.ord }
+      expect(lexer.instruction_chars).to eq(ordered_valid_chars)
     end
+  end
 
-    it 'keeps the order' do
-      instructions = Brainclusterfuck::Lexer.sanitize('][+>.<-')
+  describe '#tokens' do
+    it 'tokenizes the input correctly' do
+      # and doesn't validate the input
+      lexer = Brainclusterfuck::Lexer.new('+>][<-.')
+      expect(lexer.tokens).to eq([
+        :v_incr,
+        :p_incr,
+        :end_loop,
+        :loop,
+        :p_decr,
+        :v_decr,
+        :print
+      ])
     end
   end
 end
