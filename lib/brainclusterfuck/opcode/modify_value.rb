@@ -1,7 +1,7 @@
 module Brainclusterfuck
   class Opcode
     class ModifyValue < Opcode
-      attr_reader :modify_by, :cycles
+      attr_reader :modify_by
 
       def initialize(modify_by, cycles)
         @modify_by = modify_by.to_i

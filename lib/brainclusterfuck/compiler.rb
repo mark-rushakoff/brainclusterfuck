@@ -39,8 +39,10 @@ module Brainclusterfuck
         Opcode::ModifyPointer.new(1, 1)
       when :p_decr
         Opcode::ModifyPointer.new(-1, 1)
+      when :print
+        Opcode::Print.new
       else
-        raise 'wtf'
+        raise "Don't know how to handle token: #{token}"
       end
     end
 

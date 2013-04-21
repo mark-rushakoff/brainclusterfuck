@@ -43,5 +43,16 @@ describe Brainclusterfuck::Compiler do
         Brainclusterfuck::Opcode::ModifyPointer.new(-4, 8)
       ])
     end
+
+    it 'does not squeeze prints' do
+      compiler = Brainclusterfuck::Compiler.new(Array.new(3) { :print })
+      compiler.squeeze_operations!
+
+      expect(compiler.bytecode).to eq([
+        Brainclusterfuck::Opcode::Print.new,
+        Brainclusterfuck::Opcode::Print.new,
+        Brainclusterfuck::Opcode::Print.new
+      ])
+    end
   end
 end
