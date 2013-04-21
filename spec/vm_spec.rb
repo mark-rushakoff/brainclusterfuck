@@ -18,4 +18,13 @@ describe Brainclusterfuck::VM do
       expect(Brainclusterfuck::VM.new('+', 5).cells).to eq(mock_cells)
     end
   end
+
+  describe '.terminal' do
+    it 'is a new Terminal object' do
+      mock_terminal = double
+      Brainclusterfuck::Terminal.should_receive(:new).with(no_args).and_return(mock_terminal)
+
+      expect(Brainclusterfuck::VM.new('+', 5).terminal).to eq(mock_terminal)
+    end
+  end
 end
