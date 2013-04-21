@@ -1,5 +1,4 @@
-require 'brainclusterfuck/opcode/modify_value'
-require 'brainclusterfuck/opcode/modify_pointer'
+require 'brainclusterfuck/opcodes'
 
 module Brainclusterfuck
   class Compiler
@@ -32,15 +31,15 @@ module Brainclusterfuck
     def process_token(token)
       case token
       when :v_incr
-        Opcode::ModifyValue.new(1, 1)
+        Opcodes::ModifyValue.new(1, 1)
       when :v_decr
-        Opcode::ModifyValue.new(-1, 1)
+        Opcodes::ModifyValue.new(-1, 1)
       when :p_incr
-        Opcode::ModifyPointer.new(1, 1)
+        Opcodes::ModifyPointer.new(1, 1)
       when :p_decr
-        Opcode::ModifyPointer.new(-1, 1)
+        Opcodes::ModifyPointer.new(-1, 1)
       when :print
-        Opcode::Print.new
+        Opcodes::Print.new
       else
         raise "Don't know how to handle token: #{token}"
       end

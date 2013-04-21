@@ -1,7 +1,7 @@
 require 'spec_helper'
-require 'brainclusterfuck/opcode'
+require 'brainclusterfuck/opcodes/base'
 
-describe Brainclusterfuck::Opcode do
+describe Brainclusterfuck::Opcodes::Base do
   describe '#can_squeeze_with?' do
     it 'is false' do
       expect(described_class.new.can_squeeze_with?(described_class.new)).to eq(false)

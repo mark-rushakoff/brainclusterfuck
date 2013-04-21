@@ -1,6 +1,6 @@
 require 'spec_helper'
 require 'brainclusterfuck/compiler'
-require 'brainclusterfuck/opcode'
+require 'brainclusterfuck/opcodes'
 
 describe Brainclusterfuck::Compiler do
   it 'raises if there are no tokens' do
@@ -10,10 +10,10 @@ describe Brainclusterfuck::Compiler do
   it 'converts tokens to the correct operations' do
     compiler = Brainclusterfuck::Compiler.new([:v_incr, :p_incr, :v_decr, :p_decr])
     expect(compiler.bytecode).to eq([
-      Brainclusterfuck::Opcode::ModifyValue.new(1, 1),
-      Brainclusterfuck::Opcode::ModifyPointer.new(1, 1),
-      Brainclusterfuck::Opcode::ModifyValue.new(-1, 1),
-      Brainclusterfuck::Opcode::ModifyPointer.new(-1, 1)
+      Brainclusterfuck::Opcodes::ModifyValue.new(1, 1),
+      Brainclusterfuck::Opcodes::ModifyPointer.new(1, 1),
+      Brainclusterfuck::Opcodes::ModifyValue.new(-1, 1),
+      Brainclusterfuck::Opcodes::ModifyPointer.new(-1, 1)
     ])
   end
 
@@ -24,8 +24,8 @@ describe Brainclusterfuck::Compiler do
       compiler.squeeze_operations!
 
       expect(compiler.bytecode).to eq([
-        Brainclusterfuck::Opcode::ModifyValue.new(8, 8),
-        Brainclusterfuck::Opcode::ModifyPointer.new(-3, 3)
+        Brainclusterfuck::Opcodes::ModifyValue.new(8, 8),
+        Brainclusterfuck::Opcodes::ModifyPointer.new(-3, 3)
       ])
     end
 
@@ -39,8 +39,8 @@ describe Brainclusterfuck::Compiler do
       compiler.squeeze_operations!
 
       expect(compiler.bytecode).to eq([
-        Brainclusterfuck::Opcode::ModifyValue.new(2, 4),
-        Brainclusterfuck::Opcode::ModifyPointer.new(-4, 8)
+        Brainclusterfuck::Opcodes::ModifyValue.new(2, 4),
+        Brainclusterfuck::Opcodes::ModifyPointer.new(-4, 8)
       ])
     end
 
@@ -49,9 +49,9 @@ describe Brainclusterfuck::Compiler do
       compiler.squeeze_operations!
 
       expect(compiler.bytecode).to eq([
-        Brainclusterfuck::Opcode::Print.new,
-        Brainclusterfuck::Opcode::Print.new,
-        Brainclusterfuck::Opcode::Print.new
+        Brainclusterfuck::Opcodes::Print.new,
+        Brainclusterfuck::Opcodes::Print.new,
+        Brainclusterfuck::Opcodes::Print.new
       ])
     end
   end

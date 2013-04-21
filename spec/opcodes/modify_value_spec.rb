@@ -1,7 +1,7 @@
 require 'spec_helper'
-require 'brainclusterfuck/opcode/modify_value'
+require 'brainclusterfuck/opcodes/modify_value'
 
-describe Brainclusterfuck::Opcode::ModifyValue do
+describe Brainclusterfuck::Opcodes::ModifyValue do
   it 'stores the modify by and cycle count' do
     op = described_class.new(5, 8)
 
@@ -25,13 +25,13 @@ describe Brainclusterfuck::Opcode::ModifyValue do
 
     it 'cannot squeeze with a generic opcode' do
       op = described_class.new(1, 1)
-      expect(op.can_squeeze_with?(Brainclusterfuck::Opcode.new)).to eq(false)
+      expect(op.can_squeeze_with?(Brainclusterfuck::Opcodes::Base.new)).to eq(false)
     end
 
     it 'raises if trying to squeeze with an incompatible object' do
       op = described_class.new(1, 1)
 
-      expect { op.squeeze_with(Brainclusterfuck::Opcode.new) }.to raise_error
+      expect { op.squeeze_with(Brainclusterfuck::Opcodes::Base.new) }.to raise_error
     end
   end
 end
