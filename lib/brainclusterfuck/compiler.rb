@@ -1,10 +1,11 @@
 require 'brainclusterfuck/opcodes'
+require 'brainclusterfuck/compile_error'
 
 module Brainclusterfuck
   class Compiler
     attr_reader :bytecode
     def initialize(tokens)
-      raise "No tokens supplied" if tokens.size == 0
+      raise CompileError, "No tokens supplied" if tokens.size == 0
 
       @bytecode = tokens.map do |token|
         process_token(token)
@@ -41,7 +42,7 @@ module Brainclusterfuck
       when :print
         Opcodes::Print.new
       else
-        raise "Don't know how to handle token: #{token}"
+        raise CompileError, "Don't know how to handle token: #{token}"
       end
     end
 

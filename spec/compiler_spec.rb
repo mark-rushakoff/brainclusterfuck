@@ -1,10 +1,17 @@
 require 'spec_helper'
 require 'brainclusterfuck/compiler'
+require 'brainclusterfuck/compile_error'
 require 'brainclusterfuck/opcodes'
 
 describe Brainclusterfuck::Compiler do
-  it 'raises if there are no tokens' do
-    expect { Brainclusterfuck::Compiler.new([]) }.to raise_error
+  describe 'invalid token streams' do
+    it 'raises if there are no tokens' do
+      expect { Brainclusterfuck::Compiler.new([]) }.to raise_error(Brainclusterfuck::CompileError)
+    end
+
+    it 'raises if there are unrecognized tokens' do
+      expect { Brainclusterfuck::Compiler.new([:foo]) }.to raise_error(Brainclusterfuck::CompileError)
+    end
   end
 
   it 'converts tokens to the correct operations' do
