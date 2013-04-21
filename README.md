@@ -1,5 +1,9 @@
 # Brainclusterfuck
 
+[![Build Status](https://travis-ci.org/mark-rushakoff/brainclusterfuck.png)](https://travis-ci.org/mark-rushakoff/brainclusterfuck)
+[![Code Climate](https://codeclimate.com/github/mark-rushakoff/brainclusterfuck.png)](https://codeclimate.com/github/mark-rushakoff/brainclusterfuck)
+[![Gem Version](https://badge.fury.io/rb/brainclusterfuck.png)](http://badge.fury.io/rb/brainclusterfuck)
+
 A clean interface to controlling arrays of specialized Brainfuck VMs
 
 ## Installation
