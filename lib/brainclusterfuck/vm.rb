@@ -1,11 +1,11 @@
 module Brainclusterfuck
   class VM
-    attr_reader :input_code, :cells, :terminal
+    attr_reader :instructions, :cells, :terminal
 
-    def initialize(instructions, num_cells)
-      @input_code = Lexer.sanitize(instructions)
-      @cells = Cells.new(num_cells)
-      @terminal = Terminal.new
+    def initialize(opts)
+      @instructions = opts.fetch(:instructions)
+      @cells = opts.fetch(:cells)
+      @terminal = opts.fetch(:terminal)
     end
   end
 end
