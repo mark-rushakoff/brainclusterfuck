@@ -6,6 +6,10 @@ module Brainclusterfuck
       def can_squeeze_with?(other)
         false
       end
+
+      def unresolve_loop
+        self
+      end
     end
   end
 end

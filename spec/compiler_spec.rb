@@ -12,15 +12,34 @@ describe Brainclusterfuck::Compiler do
     it 'raises if there are unrecognized tokens' do
       expect { Brainclusterfuck::Compiler.new([:foo]) }.to raise_error(Brainclusterfuck::CompileError)
     end
+
+    it 'raises if an end loop occurs before an open loop' do
+      expect { Brainclusterfuck::Compiler.new([:loop_end]) }.to raise_error(Brainclusterfuck::PrematurelyTerminatedLoopError)
+    end
+
+    it 'raises if an open loop does not have an end loop' do
+      expect { Brainclusterfuck::Compiler.new([:loop_start]) }.to raise_error(Brainclusterfuck::UnterminatedLoopError)
+    end
+
+    it 'raises if there are too many end loops' do
+      expect { Brainclusterfuck::Compiler.new([:loop_start, :loop_end, :loop_end]) }.to raise_error(Brainclusterfuck::PrematurelyTerminatedLoopError)
+    end
+
+    it 'raises if there are not enough open loops' do
+      expect { Brainclusterfuck::Compiler.new([:loop_start, :loop_start, :loop_end]) }.to raise_error(Brainclusterfuck::UnterminatedLoopError)
+    end
   end
 
   it 'converts tokens to the correct operations' do
-    compiler = Brainclusterfuck::Compiler.new([:v_incr, :p_incr, :v_decr, :p_decr])
+    compiler = Brainclusterfuck::Compiler.new([:v_incr, :p_incr, :loop_start, :v_decr, :loop_end, :p_decr, :print])
     expect(compiler.bytecode).to eq([
       Brainclusterfuck::Opcodes::ModifyValue.new(1, 1),
       Brainclusterfuck::Opcodes::ModifyPointer.new(1, 1),
+      Brainclusterfuck::Opcodes::LoopStart.new(1),
       Brainclusterfuck::Opcodes::ModifyValue.new(-1, 1),
-      Brainclusterfuck::Opcodes::ModifyPointer.new(-1, 1)
+      Brainclusterfuck::Opcodes::LoopEnd.new(1),
+      Brainclusterfuck::Opcodes::ModifyPointer.new(-1, 1),
+      Brainclusterfuck::Opcodes::Print.new
     ])
   end
 

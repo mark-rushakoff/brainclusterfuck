@@ -7,4 +7,12 @@ describe Brainclusterfuck::Opcodes::Base do
       expect(described_class.new.can_squeeze_with?(described_class.new)).to eq(false)
     end
   end
+
+  describe '#unresolve_loop' do
+    it 'returns self' do
+      op = described_class.new
+
+      expect(op.unresolve_loop).to equal(op)
+    end
+  end
 end

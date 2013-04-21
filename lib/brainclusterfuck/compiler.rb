@@ -1,4 +1,6 @@
 require 'brainclusterfuck/opcodes'
+require 'brainclusterfuck/opcodes/loop_start_placeholder'
+require 'brainclusterfuck/opcodes/loop_end_placeholder'
 require 'brainclusterfuck/compile_error'
 
 module Brainclusterfuck
@@ -10,6 +12,8 @@ module Brainclusterfuck
       @bytecode = tokens.map do |token|
         process_token(token)
       end
+
+      resolve_loops!
     end
 
     # Merge consecutive modify value or modify pointer operations
@@ -29,6 +33,25 @@ module Brainclusterfuck
     end
 
     private
+    def resolve_loops!
+      loop_stack = []
+
+      @bytecode.each_with_index do |op, index|
+        if op.is_a?(Opcodes::LoopStartPlaceholder)
+          loop_stack.push(op: op, index: index)
+        elsif op.is_a?(Opcodes::LoopEndPlaceholder)
+          raise PrematurelyTerminatedLoopError if loop_stack.empty?
+
+          opening = loop_stack.pop
+          num_operations = index - opening[:index] - 1
+          @bytecode[opening[:index]] = Opcodes::LoopStart.new(num_operations)
+          @bytecode[index] = Opcodes::LoopEnd.new(num_operations)
+        end
+      end
+
+      raise UnterminatedLoopError unless loop_stack.empty?
+    end
+
     def process_token(token)
       case token
       when :v_incr
@@ -41,6 +64,10 @@ module Brainclusterfuck
         Opcodes::ModifyPointer.new(-1, 1)
       when :print
         Opcodes::Print.new
+      when :loop_start
+        Opcodes::LoopStartPlaceholder.new
+      when :loop_end
+        Opcodes::LoopEndPlaceholder.new
       else
         raise CompileError, "Don't know how to handle token: #{token}"
       end
