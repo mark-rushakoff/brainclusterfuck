@@ -1,6 +1,6 @@
 # Brainclusterfuck
 
-A clean interface to controlling arrays of Brainfuck VMs
+A clean interface to controlling arrays of specialized Brainfuck VMs
 
 ## Installation
 
