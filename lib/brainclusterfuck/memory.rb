@@ -1,5 +1,5 @@
 module Brainclusterfuck
-  class Cells
+  class Memory
     attr_reader :size
 
     def initialize(size)

@@ -4,19 +4,19 @@ require 'brainclusterfuck/interpreter'
 describe Brainclusterfuck::Interpreter do
   let(:bytecode) { double(:bytecode) }
   let(:terminal) { double(:terminal) }
-  let(:cells) { double(:cells) }
+  let(:memory) { double(:memory) }
 
   let(:interpreter) do
     described_class.new(
       bytecode: bytecode,
       terminal: terminal,
-      cells: cells
+      memory: memory
     )
   end
 
-  it 'exposes terminal and cells' do
+  it 'exposes terminal and memory' do
     expect(interpreter.terminal).to equal(terminal)
-    expect(interpreter.cells).to equal(cells)
+    expect(interpreter.memory).to equal(memory)
   end
 
   it 'exposes cycles, starting at 0' do
@@ -43,7 +43,7 @@ describe Brainclusterfuck::Interpreter do
 
     it 'will step exactly that number of cycles if possible' do
       bytecode.should_receive(:[]).with(0).and_return(Brainclusterfuck::Opcodes::ModifyValue.new(1, 1))
-      cells.should_receive(:modify_value).with(1)
+      memory.should_receive(:modify_value).with(1)
 
       interpreter.step(1)
       expect(interpreter.cycles).to eq(1)
@@ -51,7 +51,7 @@ describe Brainclusterfuck::Interpreter do
 
     it 'will step more than the asked cycles if necessary' do
       bytecode.should_receive(:[]).with(0).and_return(Brainclusterfuck::Opcodes::ModifyValue.new(1, 5))
-      cells.should_receive(:modify_value).with(1)
+      memory.should_receive(:modify_value).with(1)
 
       interpreter.step(1)
       expect(interpreter.cycles).to eq(5)
@@ -66,7 +66,7 @@ describe Brainclusterfuck::Interpreter do
 
       it 'handles ModifyValue' do
         set_up_bytecode(0 => Brainclusterfuck::Opcodes::ModifyValue.new(1, 9))
-        cells.should_receive(:modify_value).with(1)
+        memory.should_receive(:modify_value).with(1)
 
         interpreter.step(1)
         expect(interpreter.cycles).to eq(9)
@@ -74,7 +74,7 @@ describe Brainclusterfuck::Interpreter do
 
       it 'handles ModifyValue' do
         set_up_bytecode(0 => Brainclusterfuck::Opcodes::ModifyPointer.new(1, 9))
-        cells.should_receive(:modify_pointer).with(1)
+        memory.should_receive(:modify_pointer).with(1)
 
         interpreter.step(1)
         expect(interpreter.cycles).to eq(9)
@@ -82,7 +82,7 @@ describe Brainclusterfuck::Interpreter do
 
       it 'handles Print' do
         set_up_bytecode(0 => Brainclusterfuck::Opcodes::Print.new)
-        cells.stub(current_char: 'x')
+        memory.stub(current_char: 'x')
         terminal.should_receive(:print).with('x')
 
         interpreter.step(1)

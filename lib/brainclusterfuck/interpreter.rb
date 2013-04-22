@@ -1,9 +1,9 @@
 module Brainclusterfuck
   class Interpreter
-    attr_reader :terminal, :cells, :cycles, :instruction_pointer
+    attr_reader :terminal, :memory, :cycles, :instruction_pointer
     def initialize(opts)
       @terminal = opts.fetch(:terminal)
-      @cells = opts.fetch(:cells)
+      @memory = opts.fetch(:memory)
       @bytecode = opts.fetch(:bytecode)
 
       @cycles = 0
@@ -36,15 +36,15 @@ module Brainclusterfuck
     end
 
     def modify_value(opcode)
-      @cells.modify_value(opcode.modify_by)
+      @memory.modify_value(opcode.modify_by)
     end
 
     def modify_pointer(opcode)
-      @cells.modify_pointer(opcode.modify_by)
+      @memory.modify_pointer(opcode.modify_by)
     end
 
     def print(_opcode)
-      @terminal.print(@cells.current_char)
+      @terminal.print(@memory.current_char)
     end
   end
 end
