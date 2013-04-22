@@ -9,6 +9,10 @@ module Brainclusterfuck
       @cells = Hash.new { 0 }
     end
 
+    def current_char
+      current_value.chr
+    end
+
     def current_value
       @cells[@pointer]
     end

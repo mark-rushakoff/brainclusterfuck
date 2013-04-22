@@ -1,6 +1,8 @@
+require 'brainclusterfuck/interpreter_error'
+
 module Brainclusterfuck
   class Interpreter
-    attr_reader :terminal, :memory, :cycles, :instruction_pointer
+    attr_reader :terminal, :memory, :cycles, :instruction_pointer, :finished
     def initialize(opts)
       @terminal = opts.fetch(:terminal)
       @memory = opts.fetch(:memory)
@@ -15,11 +17,21 @@ module Brainclusterfuck
 
       while cycles > 0
         opcode = @bytecode[@instruction_pointer]
+
+        unless opcode
+          @finished = true
+          return
+        end
+
         cycles -= opcode.cycles
         @cycles += opcode.cycles
 
         execute(opcode)
       end
+    end
+
+    def finished?
+      !!@finished
     end
 
     private
@@ -33,6 +45,8 @@ module Brainclusterfuck
       method = @op_to_method[opcode.class]
       raise ArgumentError, "Don't know how to handle #{opcode}" if method.nil?
       __send__(method, opcode)
+      @instruction_pointer += 1
+      @@finished = @instruction_pointer >= @bytecode.size
     end
 
     def modify_value(opcode)

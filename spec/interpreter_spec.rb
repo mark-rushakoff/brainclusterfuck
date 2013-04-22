@@ -2,7 +2,7 @@ require 'spec_helper'
 require 'brainclusterfuck/interpreter'
 
 describe Brainclusterfuck::Interpreter do
-  let(:bytecode) { double(:bytecode) }
+  let(:bytecode) { double(:bytecode, size: 5) }
   let(:terminal) { double(:terminal) }
   let(:memory) { double(:memory) }
 
@@ -39,6 +39,14 @@ describe Brainclusterfuck::Interpreter do
       bytecode.should_receive(:[]).with(0).and_return(weird_opcode)
 
       expect { interpreter.step(1) }.to raise_error(ArgumentError)
+    end
+
+    it 'does nothing when stepping past a fully-executed program' do
+      bytecode.should_receive(:[]).with(0).and_return(nil)
+
+      interpreter.step(1)
+
+      expect(interpreter).to be_finished
     end
 
     it 'will step exactly that number of cycles if possible' do

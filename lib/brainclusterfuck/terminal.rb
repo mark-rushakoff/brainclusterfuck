@@ -5,5 +5,9 @@ module Brainclusterfuck
     def initialize
       @text = ''
     end
+
+    def print(char)
+      @text << char
+    end
   end
 end
