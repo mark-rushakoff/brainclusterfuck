@@ -12,10 +12,10 @@ module Brainclusterfuck
       @instruction_pointer = 0
     end
 
-    def step(cycles = 1)
-      raise ArgumentError, "cycles must be positive" unless cycles > 0
+    def step(cycles_allowed = 1)
+      raise ArgumentError, "cycles_allowed must be positive" unless cycles_allowed > 0
 
-      while cycles > 0
+      while cycles_allowed > 0
         opcode = @bytecode[@instruction_pointer]
 
         unless opcode
@@ -23,7 +23,7 @@ module Brainclusterfuck
           return
         end
 
-        cycles -= opcode.cycles
+        cycles_allowed -= opcode.cycles
         @cycles += opcode.cycles
 
         execute(opcode)
