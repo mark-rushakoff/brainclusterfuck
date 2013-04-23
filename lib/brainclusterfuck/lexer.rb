@@ -26,9 +26,9 @@ module Brainclusterfuck
         when '.'
           :print
         when '['
-          :loop
+          :loop_start
         when ']'
-          :end_loop
+          :loop_end
         else
           raise 'wtf?'
         end

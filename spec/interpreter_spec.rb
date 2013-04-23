@@ -68,7 +68,7 @@ describe Brainclusterfuck::Interpreter do
     describe 'opcodes' do
       def set_up_bytecode(hash)
         hash.each do |index, op|
-          bytecode.should_receive(:[]).with(index).and_return(op)
+          bytecode.stub(:[]).with(index).and_return(op)
         end
       end
 
@@ -95,6 +95,59 @@ describe Brainclusterfuck::Interpreter do
 
         interpreter.step(1)
         expect(interpreter.cycles).to eq(1)
+      end
+
+      describe 'loops' do
+        before do
+          set_up_bytecode(
+            0 => Brainclusterfuck::Opcodes::LoopStart.new(1),
+            1 => Brainclusterfuck::Opcodes::ModifyPointer.new(1, 1),
+            2 => Brainclusterfuck::Opcodes::LoopEnd.new(1),
+            3 => Brainclusterfuck::Opcodes::ModifyValue.new(1, 1),
+          )
+        end
+
+        describe 'LoopStart' do
+          it 'stays in the loop when the current value is non-zero' do
+            memory.stub(current_value: 1)
+            memory.should_receive(:modify_pointer).with(1)
+            memory.should_not_receive(:modify_value)
+
+            interpreter.step(2)
+            expect(interpreter.cycles).to eq(2)
+          end
+
+          it 'jumps past the end loop when the current value is zero' do
+            memory.stub(current_value: 0)
+            memory.should_receive(:modify_value).with(1)
+            memory.should_not_receive(:modify_pointer)
+
+            interpreter.step(2)
+            expect(interpreter.cycles).to eq(2)
+          end
+        end
+
+        describe 'LoopEnd' do
+          it 'goes past the loop when the value is zero' do
+            memory.stub(current_value: 1)
+            memory.should_receive(:modify_pointer).with(1) do
+              memory.stub(current_value: 0)
+              memory.should_receive(:modify_value).with(1)
+            end
+
+            interpreter.step(4)
+
+            expect(interpreter.cycles).to eq(4)
+          end
+
+          it 'goes back to the beginning of the loop when the value is non-zero' do
+            memory.stub(current_value: 1)
+            memory.should_receive(:modify_pointer).with(1).twice
+
+            interpreter.step(4)
+            expect(interpreter.cycles).to eq(4)
+          end
+        end
       end
     end
   end

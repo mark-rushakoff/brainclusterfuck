@@ -39,26 +39,46 @@ module Brainclusterfuck
       @op_to_method ||= {
         Opcodes::ModifyValue => :modify_value,
         Opcodes::ModifyPointer => :modify_pointer,
+        Opcodes::LoopStart => :loop_start,
+        Opcodes::LoopEnd => :loop_end,
         Opcodes::Print => :print
       }
 
       method = @op_to_method[opcode.class]
       raise ArgumentError, "Don't know how to handle #{opcode}" if method.nil?
       __send__(method, opcode)
-      @instruction_pointer += 1
-      @@finished = @instruction_pointer >= @bytecode.size
+      @finished = @instruction_pointer >= @bytecode.size
     end
 
     def modify_value(opcode)
       @memory.modify_value(opcode.modify_by)
+      @instruction_pointer += 1
     end
 
     def modify_pointer(opcode)
       @memory.modify_pointer(opcode.modify_by)
+      @instruction_pointer += 1
     end
 
     def print(_opcode)
       @terminal.print(@memory.current_char)
+      @instruction_pointer += 1
+    end
+
+    def loop_start(opcode)
+      if @memory.current_value.zero?
+        @instruction_pointer += (opcode.num_operations + 2)
+      else
+        @instruction_pointer += 1
+      end
+    end
+
+    def loop_end(opcode)
+      if @memory.current_value.zero?
+        @instruction_pointer += 1
+      else
+        @instruction_pointer -= opcode.num_operations
+      end
     end
   end
 end

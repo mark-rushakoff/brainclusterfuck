@@ -21,8 +21,8 @@ describe Brainclusterfuck::Lexer do
       expect(lexer.tokens).to eq([
         :v_incr,
         :p_incr,
-        :end_loop,
-        :loop,
+        :loop_end,
+        :loop_start,
         :p_decr,
         :v_decr,
         :print
