@@ -84,22 +84,5 @@ module Brainclusterfuck
         raise CompileError, "Don't know how to handle token: #{token}"
       end
     end
-
-    def compress_bytecode(bytecode)
-      compressed = [bytecode.shift]
-
-      bytecode.each do |op, value|
-        case op
-        when :modify_value, :modify_pointer
-          if compressed[-1][0] == op
-            compressed[-1][1] += value
-          else
-            compressed << [op, value]
-          end
-        end
-      end
-
-      compressed
-    end
   end
 end
