@@ -38,4 +38,28 @@ describe 'Printing simple text' do
       it_prints
     end
   end
+
+  describe 'printing X using multiple memory locations' do
+    let(:program) { '>++++++++[<+++++++++++>-]<.' }
+
+    def self.it_prints_x
+      it 'sends "!" to the terminal object' do
+        interpreter.step(500)
+        expect(interpreter).to be_finished
+        expect(terminal.text).to eq('X')
+      end
+    end
+
+    context 'without optimizing' do
+      it_prints_x
+    end
+
+    context 'when optimizing' do
+      before do
+        compiler.squeeze_operations!
+      end
+
+      it_prints_x
+    end
+  end
 end

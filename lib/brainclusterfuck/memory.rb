@@ -21,5 +21,9 @@ module Brainclusterfuck
       # keep value in one byte
       @cells[@pointer] = (@cells[@pointer] + amount.to_i) & 0xFF
     end
+
+    def modify_pointer(amount)
+      @pointer += amount
+    end
   end
 end

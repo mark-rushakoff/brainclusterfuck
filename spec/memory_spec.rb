@@ -16,4 +16,14 @@ describe Brainclusterfuck::Memory do
 
     expect(memory.current_value).to eq(5)
   end
+
+  it 'can modify the pointer' do
+    memory.modify_value(5)
+
+    memory.modify_pointer(1)
+    expect(memory.current_value).to eq(0)
+
+    memory.modify_pointer(-1)
+    expect(memory.current_value).to eq(5)
+  end
 end
