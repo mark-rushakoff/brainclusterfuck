@@ -26,4 +26,8 @@ describe Brainclusterfuck::Memory do
     memory.modify_pointer(-1)
     expect(memory.current_value).to eq(5)
   end
+
+  it 'raises if modifying the pointer out of bounds' do
+    expect { memory.modify_pointer(-1) }.to raise_error(Brainclusterfuck::MemoryError)
+  end
 end

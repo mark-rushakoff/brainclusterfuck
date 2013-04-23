@@ -44,13 +44,34 @@ describe Brainclusterfuck::Compiler do
   end
 
   describe '#squeeze_operations' do
-    it 'compresses the incr/decr operations' do
+    it 'compresses the lone incr/decr operations' do
       tokens = (Array.new(8) { :v_incr }).concat(Array.new(3) { :p_decr })
       compiler = Brainclusterfuck::Compiler.new(tokens)
       compiler.squeeze_operations!
 
       expect(compiler.bytecode).to eq([
         Brainclusterfuck::Opcodes::ModifyValue.new(8, 8),
+        Brainclusterfuck::Opcodes::ModifyPointer.new(-3, 3)
+      ])
+    end
+
+    it 'merges opposite-direction value modifiers' do
+      tokens = (Array.new(8) { :v_incr }).concat(Array.new(3) { :v_decr })
+      compiler = Brainclusterfuck::Compiler.new(tokens)
+      compiler.squeeze_operations!
+
+      expect(compiler.bytecode).to eq([
+        Brainclusterfuck::Opcodes::ModifyValue.new(5, 11)
+      ])
+    end
+
+    it 'does not merge opposite-direction pointer modifiers' do
+      tokens = (Array.new(8) { :p_incr }).concat(Array.new(3) { :p_decr })
+      compiler = Brainclusterfuck::Compiler.new(tokens)
+      compiler.squeeze_operations!
+
+      expect(compiler.bytecode).to eq([
+        Brainclusterfuck::Opcodes::ModifyPointer.new(8, 8),
         Brainclusterfuck::Opcodes::ModifyPointer.new(-3, 3)
       ])
     end
@@ -66,7 +87,8 @@ describe Brainclusterfuck::Compiler do
 
       expect(compiler.bytecode).to eq([
         Brainclusterfuck::Opcodes::ModifyValue.new(2, 4),
-        Brainclusterfuck::Opcodes::ModifyPointer.new(-4, 8)
+        Brainclusterfuck::Opcodes::ModifyPointer.new(-6, 6),
+        Brainclusterfuck::Opcodes::ModifyPointer.new(2, 2)
       ])
     end
 

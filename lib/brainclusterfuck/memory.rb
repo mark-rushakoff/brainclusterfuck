@@ -1,3 +1,5 @@
+require 'brainclusterfuck/memory_error'
+
 module Brainclusterfuck
   class Memory
     attr_reader :size
@@ -24,6 +26,8 @@ module Brainclusterfuck
 
     def modify_pointer(amount)
       @pointer += amount
+
+      raise MemoryError if (@pointer < 0 || @pointer >= @size)
     end
   end
 end
