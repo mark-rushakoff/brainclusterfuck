@@ -14,6 +14,32 @@ describe 'Boundary conditions' do
     )
   end
 
+  describe 'mismatched loop operators' do
+    def self.it_raises
+      it 'does not compile' do
+        expect { interpreter }.to raise_error(Brainclusterfuck::CompileError)
+      end
+    end
+
+    describe 'missing end' do
+      let(:program) { '[+' }
+
+      it_raises
+    end
+
+    describe 'missing start' do
+      let(:program) { '+]' }
+
+      it_raises
+    end
+
+    describe 'wrong order' do
+      let(:program) { ']-[' }
+
+      it_raises
+    end
+  end
+
   describe 'adjusting pointer out of bounds' do
     let(:program) { '<>>' }
 
