@@ -39,11 +39,11 @@ describe 'Printing simple text' do
     end
   end
 
-  describe 'printing X using multiple memory locations' do
+  describe 'printing "X" using multiple memory locations' do
     let(:program) { '>++++++++[<+++++++++++>-]<.' }
 
     def self.it_prints_x
-      it 'sends "!" to the terminal object' do
+      it 'sends "X" to the terminal object' do
         interpreter.step(500)
         expect(interpreter).to be_finished
         expect(terminal.text).to eq('X')
