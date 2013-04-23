@@ -16,7 +16,6 @@ describe 'A brainfuck program that just prints "!"' do
   end
 
   it 'sends "!" to the terminal object without optimizing' do
-    puts interpreter.step(35)
     interpreter.step(35)
     expect(interpreter).to be_finished
     expect(interpreter.cycles).to eq(34) # 33 increments + 1 print
