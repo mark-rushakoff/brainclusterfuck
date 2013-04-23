@@ -28,13 +28,28 @@ describe 'Basic loops' do
       ).size
     end
 
-    it 'sends "!" to the terminal object without optimizing' do
-      memory.modify_value(3)
-      interpreter.step(expected_cycles)
-      expect(interpreter).to be_finished
+    def self.it_clears_the_cell
+      it 'reduces the value of that cell to zero' do
+        memory.modify_value(3)
+        interpreter.step(expected_cycles)
+        expect(interpreter).to be_finished
 
-      expect(interpreter.cycles).to eq(expected_cycles)
-      expect(memory.current_value).to eq(0)
+        expect(interpreter.cycles).to eq(expected_cycles)
+        expect(memory.current_value).to eq(0)
+      end
     end
+
+    context 'without optimizing' do
+      it_clears_the_cell
+    end
+
+    context 'with optimizing' do
+      before do
+        compiler.squeeze_operations!
+      end
+
+      it_clears_the_cell
+    end
+
   end
 end

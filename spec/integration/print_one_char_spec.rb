@@ -15,10 +15,24 @@ describe 'A brainfuck program that just prints "!"' do
     )
   end
 
-  it 'sends "!" to the terminal object without optimizing' do
-    interpreter.step(35)
-    expect(interpreter).to be_finished
-    expect(interpreter.cycles).to eq(34) # 33 increments + 1 print
-    expect(terminal.text).to eq('!')
+  def self.it_prints
+    it 'sends "!" to the terminal object' do
+      interpreter.step(35)
+      expect(interpreter).to be_finished
+      expect(interpreter.cycles).to eq(34) # 33 increments + 1 print
+      expect(terminal.text).to eq('!')
+    end
+  end
+
+  context 'without optimizing' do
+    it_prints
+  end
+
+  context 'when optimizing' do
+    before do
+      compiler.squeeze_operations!
+    end
+
+    it_prints
   end
 end
