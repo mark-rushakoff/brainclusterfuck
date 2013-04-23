@@ -10,6 +10,10 @@ module Brainclusterfuck
       def unresolve_loop
         self
       end
+
+      def resolve_loop
+        self
+      end
     end
   end
 end

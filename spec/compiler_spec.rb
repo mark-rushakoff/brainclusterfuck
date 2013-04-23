@@ -80,5 +80,23 @@ describe Brainclusterfuck::Compiler do
         Brainclusterfuck::Opcodes::Print.new
       ])
     end
+
+    it 'handles loops properly' do
+      compiler = Brainclusterfuck::Compiler.new([
+        :loop_start,
+        :v_decr,
+        :v_decr,
+        :v_decr,
+        :loop_end
+      ])
+
+      compiler.squeeze_operations!
+
+      expect(compiler.bytecode).to eq([
+        Brainclusterfuck::Opcodes::LoopStart.new(1),
+        Brainclusterfuck::Opcodes::ModifyValue.new(-3, 3),
+        Brainclusterfuck::Opcodes::LoopEnd.new(1)
+      ])
+    end
   end
 end

@@ -18,21 +18,29 @@ module Brainclusterfuck
 
     # Merge consecutive modify value or modify pointer operations
     def squeeze_operations!
-      compressed = [@bytecode.shift]
+      modifying_bytecode_length do
+        compressed = [@bytecode.shift]
 
-      @bytecode.each do |opcode|
-        last = compressed[-1]
-        if opcode.can_squeeze_with?(last)
-          compressed[-1] = opcode.squeeze_with(last)
-        else
-          compressed << opcode
+        @bytecode.each do |opcode|
+          last = compressed[-1]
+          if opcode.can_squeeze_with?(last)
+            compressed[-1] = opcode.squeeze_with(last)
+          else
+            compressed << opcode
+          end
         end
-      end
 
-      @bytecode = compressed
+        @bytecode = compressed
+      end
     end
 
     private
+    def modifying_bytecode_length(&blk)
+      unresolve_loops!
+      yield
+      resolve_loops!
+    end
+
     def resolve_loops!
       loop_stack = []
 
@@ -50,6 +58,10 @@ module Brainclusterfuck
       end
 
       raise UnterminatedLoopError unless loop_stack.empty?
+    end
+
+    def unresolve_loops!
+      @bytecode.map! { |op| op.unresolve_loop }
     end
 
     def process_token(token)

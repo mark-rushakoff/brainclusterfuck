@@ -15,4 +15,12 @@ describe Brainclusterfuck::Opcodes::Base do
       expect(op.unresolve_loop).to equal(op)
     end
   end
+
+  describe '#resolve_loop' do
+    it 'returns self' do
+      op = described_class.new
+
+      expect(op.resolve_loop).to equal(op)
+    end
+  end
 end

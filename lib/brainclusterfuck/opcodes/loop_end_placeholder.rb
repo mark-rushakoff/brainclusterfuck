@@ -1,9 +1,6 @@
-require 'brainclusterfuck/opcodes/base'
+require 'brainclusterfuck/opcodes/loop_placeholder'
 
 module Brainclusterfuck::Opcodes
-  class LoopEndPlaceholder < Base
-    def initialize
-      @cycles = 1
-    end
+  class LoopEndPlaceholder < LoopPlaceholder
   end
 end
